@@ -79,7 +79,7 @@ vim.o.termguicolors = true
 vim.o.cursorline = true
 
 -- Fat cursor
-vim.opt.guicursor = ""
+-- vim.opt.guicursor = ""
 
 -- Disable netrw at the very start of your init.lua
 vim.g.loaded_netrw = 1
@@ -116,6 +116,16 @@ vim.keymap.set({ "n", "x", "v" }, "x", '"_x')
 vim.keymap.set("v", "J", ":m '>+1<CR> gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR> gv=gv")
 
+-- Keep text selected when indenting
+vim.keymap.set("v", ">", ">gv")
+vim.keymap.set("v", "<", "<gv")
+
+-- Move by graphical lines
+vim.keymap.set("n", "k", "gk")
+vim.keymap.set("n", "j", "gj")
+vim.keymap.set("v", "k", "gk")
+vim.keymap.set("v", "j", "gj")
+
 -- Replace without touching the buffer
 vim.keymap.set("x", "<leader>p", '"_dP')
 
@@ -126,7 +136,7 @@ vim.keymap.set("n", "<leader>S", 'Bi"<esc>Ea"<esc>')
 -- Sort selected text
 vim.keymap.set("v", "<leader>S", ":sort<cr>")
 
--- Select whole buffe
+-- Select whole buffer
 vim.keymap.set("n", "<leader>A", ":keepjumps normal! ggVG<cr>")
 
 -- Tabs
@@ -139,12 +149,12 @@ vim.keymap.set("n", "<leader>l", "<cmd>tabn 4<cr>") -- tab 4
 vim.keymap.set("n", "<leader>R", "<cmd>registers<cr>")
 
 -- Disable scroll in insert mode
-vim.keymap.set("i", "<Up>", "<nop>")
-vim.keymap.set("i", "<Down>", "<nop>")
-vim.keymap.set("n", "<Up>", "<nop>")
-vim.keymap.set("n", "<Down>", "<nop>")
-vim.keymap.set("v", "<Up>", "<nop>")
-vim.keymap.set("v", "<Down>", "<nop>")
+-- vim.keymap.set("i", "<Up>", "<nop>")
+-- vim.keymap.set("i", "<Down>", "<nop>")
+-- vim.keymap.set("n", "<Up>", "<nop>")
+-- vim.keymap.set("n", "<Down>", "<nop>")
+-- vim.keymap.set("v", "<Up>", "<nop>")
+-- vim.keymap.set("v", "<Down>", "<nop>")
 
 -- Toggle first letter of word upper case or lower case
 vim.keymap.set("n", "<leader>U", "viWo<esc>gUl")
@@ -206,6 +216,27 @@ require("lazy").setup({
   { "wellle/targets.vim" }, -- surround
   { "zhimsel/vim-stay" }, -- cursor stays in place on file closing and reopening
   { "ellisonleao/glow.nvim", config = true, cmd = "Glow" }, -- md previwer
+  { "lervag/vimtex" }, -- VimTeX
+
+  {
+    -- Mason
+    "williamboman/mason.nvim",
+    dependencies = {
+      -- Mason lspconfig
+      "williamboman/mason-lspconfig.nvim",
+      "neovim/nvim-lspconfig",
+    },
+  },
+
+  {
+    -- Which Key
+    "folke/which-key.nvim",
+    event = "VeryLazy",
+    init = function()
+      vim.o.timeout = true
+      vim.o.timeoutlen = 300
+    end
+  },
 
   {
     -- LSP Configuration & Plugins
@@ -271,9 +302,9 @@ require("kanagawa").setup({
 
 vim.cmd.colorscheme("kanagawa")
 
-vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
-vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
+-- vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
+-- vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+-- vim.api.nvim_set_hl(0, "LineNr", { bg = "none" })
 vim.api.nvim_set_hl(0, "LineNr", { fg = "#C8C093" })
 
 -- Lualine
@@ -299,7 +330,7 @@ vim.opt.list = true
 vim.opt.listchars:append("eol:↴")
 
 require("ibl").setup({
-  debounce = 100,
+  debounce = 300,
   indent = { char = "|" },
   whitespace = { highlight = { "Whitespace", "NonText" } },
   scope = { exclude = { language = { "lua" } } },
@@ -337,6 +368,36 @@ require("nvim-treesitter.configs").setup({
     },
   },
 })
+
+-- Mason
+require("mason").setup()
+require("mason-lspconfig").setup()
+require("mason-lspconfig").setup_handlers {
+    -- The first entry (without a key) will be the default handler
+    -- and will be called for each installed server that doesn't have
+    -- a dedicated handler.
+    function (server_name) -- default handler (optional)
+        require("lspconfig")[server_name].setup {}
+    end,
+    -- Next, you can provide a dedicated handler for specific servers.
+    -- For example, a handler override for the `rust_analyzer`:
+    -- ["rust_analyzer"] = function ()
+    --     require("rust-tools").setup {}
+    -- end
+}
+
+-- Which Key
+require("which-key").setup()
+
+-- VimTeX
+vim.g.vimtex_quickfix_enabled = 1
+vim.g.vimtex_syntax_enabled = 0
+vim.g.vimtex_quickfix_autoclose_after_keystrokes = 1
+vim.g.vimtex_compiler_latexmk = {
+  options = {
+    '-shell-escape',
+  }
+}
 
 -- Targets
 vim.g.targets_aiAI = "aiAI"
@@ -383,6 +444,7 @@ local function my_on_attach(bufnr)
 end
 
 require("nvim-tree").setup({
+  hijack_unnamed_buffer_when_opening = true,
   actions = {
     open_file = {
       quit_on_open = true,
