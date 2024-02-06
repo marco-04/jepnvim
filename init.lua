@@ -390,7 +390,7 @@ require("mason-lspconfig").setup_handlers {
 require("which-key").setup()
 
 -- VimTeX
-vim.g.vimtex_quickfix_enabled = 1
+vim.g.vimtex_quickfix_enabled = 0
 vim.g.vimtex_syntax_enabled = 0
 vim.g.vimtex_quickfix_autoclose_after_keystrokes = 1
 vim.g.vimtex_compiler_latexmk = {
