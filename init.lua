@@ -553,6 +553,7 @@ require("toggleterm").setup({
   open_mapping = "<C-t>",
   direction = "horizontal",
   shade_terminals = true,
+  size = vim.o.lines/2,
 })
 
 -- Colorizer
