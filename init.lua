@@ -778,10 +778,10 @@ cmp.setup({
   },
 })
 
-local dict = require("cmp_dictionary")
-
-dict.switcher({
-  spelllang = {
-    en = "/home/leo/.config/nvim/dicts/en.dict",
-  },
-})
+-- local dict = require("cmp_dictionary")
+--
+-- dict.switcher({
+--   spelllang = {
+--     en = "/home/leo/.config/nvim/dicts/en.dict",
+--   },
+-- })
