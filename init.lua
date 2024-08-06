@@ -200,6 +200,7 @@ require("lazy").setup({
   { "editorconfig/editorconfig-vim" },
   { "folke/trouble.nvim" }, -- debug
   { "kyazdani42/nvim-tree.lua" }, -- file manager
+  { "lewis6991/gitsigns.nvim" }, -- git change indicators
   { "lukas-reineke/indent-blankline.nvim" }, -- indent blankline
   { "mbbill/undotree" }, -- better undo
   { "norcalli/nvim-colorizer.lua" }, -- color over #999999
@@ -324,6 +325,12 @@ require("lualine").setup({
 
 -- Nvim web devicons
 require("nvim-web-devicons").setup({})
+
+-- Git signs
+require("gitsigns").setup({
+  signcolumn = true,
+  numhl = true,
+})
 
 -- Indent-Blankline
 vim.opt.list = true
